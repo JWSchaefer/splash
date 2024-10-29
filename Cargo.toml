@@ -1,0 +1,13 @@
+[package]
+name = "sph"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+nalgebra = "0.33.0"
+num = "0.4.3"
+rand = { version = "0.8.5", features = ["small_rng"] }
+
+[[bin]]
+name = "playground"
+path = "src/main.rs"
