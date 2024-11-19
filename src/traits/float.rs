@@ -1,4 +1,5 @@
-pub trait Float: Copy + std::ops::Add<Output = Self> {
+use num_traits::Zero;
+pub trait Float: Copy + std::ops::Add<Output = Self> + Zero {
     const PI: Self;
 
     // Convert from f64
