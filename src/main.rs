@@ -1,6 +1,6 @@
-use ndarray::Array2;
 use sph::systems::particle::ParticleSystem;
-use sph::state::{BasicState, State};
+use sph::states::basic_state::BasicState3;
+
 // use nalgebra::{Point2, Vector2};
 // use sph::interpolate::density::{self, density};
 // use sph::kernels::cubic_spline::CubicSpline;
@@ -32,48 +32,37 @@ use sph::state::{BasicState, State};
 // }
 
 pub fn main() {
-    fn calc(i: usize, j: usize) -> f32 {
+    fn calc(inp: (usize, usize)) -> f32 {
+        let (i, j) = inp;
         let (i, j): (f32, f32) = (i as f32, j as f32);
         i + j / 10.0
     }
 
-    let data = Array2::<f32>::from_shape_fn((8, 6), |(i, j)| calc(i, j));
+    let system = ParticleSystem::<BasicState3<f32>>::from_shape_fn(15, calc);
 
-    let system = ParticleSystem::<BasicState<f32>>::from_array(3, data);
+    let positions = system.state.position();
 
-    let positions = system.state.positions();
     let (m, n) = positions.dim();
     println!("Positions:\t{m} x {n}");
     println!("{positions}");
 
-    let velocities = system.state.velocities();
+    let velocities = system.state.velocity();
     let (m, n) = velocities.dim();
     println!("Velocities:\t{m} x {n}");
     println!("{velocities}");
 
-    let masses = system.state.masses();
+    let masses = system.state.mass();
     let m = masses.dim();
-    println!("Masses:\t\t{m}");
+    println!("Masses:\t\t{m:?}");
     println!("{masses}");
 
-    let densities = system.state.densities();
+    let densities = system.state.density();
     let m = densities.dim();
-    println!("Densities:\t{m}");
+    println!("Densities:\t{m:?}");
     println!("{densities}");
 
-    let position = system.state.position(2);
-    let m = position.dim();
-    println!("Position:\t{m}");
-    println!("{position}");
-
-    let velocity = system.state.velocity(2);
-    let m = velocity.dim();
-    println!("Velocity:\t{m}");
-    println!("{velocity}");
-
-    let mass = system.state.mass(2);
-    println!("Mass:\t\t{mass}");
-
-    let density = system.state.density(2);
-    println!("Density:\t{density}");
+    let spins = system.state.spin();
+    let m = densities.dim();
+    println!("Spins:\t{m:?}");
+    println!("{spins}");
 }

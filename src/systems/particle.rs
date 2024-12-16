@@ -1,8 +1,8 @@
 use ndarray::Array2;
+use crate::errors::ArrayError;
 use crate::traits::float::Float;
-use crate::state::State;
+use crate::State;
 
-#[repr(C)]
 pub struct ParticleSystem<S>
 where
     S: State,
@@ -15,14 +15,22 @@ where
     S: State,
     S::T: Float,
 {
-    pub fn new(dim: usize, particles: usize) -> Self {
+    pub fn new(particles: usize) -> Self {
         Self {
-            state: S::new(dim, particles),
+            state: S::new(particles),
         }
     }
-    pub fn from_array(dim: usize, data: Array2<<S as State>::T>) -> Self {
+    pub fn from_array(data: Array2<<S as State>::T>) -> Result<Self, ArrayError> {
+        Ok(Self {
+            state: S::from_array(data)?,
+        })
+    }
+    pub fn from_shape_fn<F>(particles: usize, f: F) -> Self
+    where
+        F: FnMut((usize, usize)) -> S::T,
+    {
         Self {
-            state: S::from_array(dim, data).unwrap(),
+            state: S::from_shape_fn(particles, f),
         }
     }
 }
