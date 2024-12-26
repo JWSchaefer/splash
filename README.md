@@ -5,9 +5,3 @@
 </p>
 
 Flexible SPH algorithms in rust.
-
-## :rocket: Quickstart
-
-```bash
-cargo add splash
-```
