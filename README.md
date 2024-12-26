@@ -6,7 +6,7 @@
 
 Flexible SPH algorithms in rust.
 
-## :Rocket: Quickstart
+## :rocket: Quickstart
 
 ```bash
 cargo add splash
