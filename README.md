@@ -1,7 +1,7 @@
 # Splash
 
 <p align="center">
-  <img src="resources/splash.png" width="160"/>
+  <a href="https://www.freepik.com"><img src="resources/splash.png" width="160"/><a/>
 </p>
 
 Flexible SPH algorithms in rust.
