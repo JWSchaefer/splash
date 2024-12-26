@@ -1,8 +1,17 @@
-use ndarray::{Array2, ArrayView2};
-use crate::traits::Float;
+use ndarray::ArrayView1;
+use anyhow::Result;
+use crate::Float;
 
-pub trait Kernel<T: Float> {
-    fn new(h: T) -> Self;
-    fn apply(&self, x1: ArrayView2<T>, x2: ArrayView2<T>) -> Array2<T>;
-    fn apply_derivative(&self, x1: ArrayView2<T>, x2: ArrayView2<T>) -> Array2<T>;
+pub trait Kernel: Sized {
+    fn new(h: Float) -> Result<Self>;
+    fn apply(
+        &self,
+        x1: ArrayView1<Float>,
+        x2: ArrayView1<Float>,
+    ) -> Result<Float>;
+    fn apply_derivative(
+        &self,
+        x1: ArrayView1<Float>,
+        x2: ArrayView1<Float>,
+    ) -> Result<Float>;
 }

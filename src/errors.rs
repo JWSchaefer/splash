@@ -1,13 +1,28 @@
-use std::fmt;
+use std::{error::Error, fmt::Debug};
 
-#[derive(Debug, Clone)]
-pub enum ArrayError {
-    Dimension,
-    Function,
+#[derive(thiserror::Error)]
+pub enum SphError {
+    #[error("Incorrect array shape: expected {:?}, got {:?}", .expected, .actual)]
+    ShapeError {
+        expected: Vec<usize>,
+        actual: Vec<usize>,
+    },
+
+    #[error("Ivalid dimension {:?}", .dim)]
+    DimensionError { dim: usize },
+
+    #[error(
+        "This error has not yet been implemented and is for development only"
+    )]
+    TestError,
 }
 
-impl fmt::Display for ArrayError {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Unable to construct state from the provided array")
+impl Debug for SphError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        writeln!(f, "{}", self)?;
+        if let Some(source) = self.source() {
+            writeln!(f, "Caused by:\n\t{}", source)?;
+        }
+        Ok(())
     }
 }

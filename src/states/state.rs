@@ -44,23 +44,23 @@ macro_rules! construct_state {
 
 
         #[derive(Debug)]
-        pub struct $state_name<T> {
+        pub struct $state_name {
             indicies : Indices,
-            data : ndarray::Array2<T>,
+            data : ndarray::Array2<crate::Float>,
         }
 
         paste::paste! {
 
-        impl<T> $state_name<T>   {
+        impl $state_name   {
 
             $(
 
-                pub fn $name(&self) -> ndarray::ArrayView2<T> {
+                pub fn $name(&self) -> ndarray::ArrayView2<crate::Float> {
                     let range : std::ops::Range<usize> = self.indicies.$name.clone();
                     self.data.slice(ndarray::s![range, ..])
                 }
 
-                pub fn [<$name _mut>](&mut self) -> ndarray::ArrayViewMut2<T> {
+                pub fn [<$name _mut>](&mut self) -> ndarray::ArrayViewMut2<crate::Float> {
                     let range : std::ops::Range<usize> = self.indicies.$name.clone();
                     self.data.slice_mut(ndarray::s![range, ..])
                 }
@@ -69,25 +69,24 @@ macro_rules! construct_state {
             }
         }
 
-        impl<T> crate::State for $state_name<T>
-        where
-            T : crate::traits::Float
+        impl crate::State for $state_name
+
         {
 
-            type T = T;
+
 
             fn new(particles: usize) -> Self {
                 let indicies = Indices::new();
-                let data = ndarray::Array2::<Self::T>::zeros((indicies.max, particles));
+                let data = ndarray::Array2::<crate::Float>::zeros((indicies.max, particles));
                 Self { indicies, data }
             }
 
-            fn from_array(data: ndarray::Array2<Self::T>) -> Result<Self, crate::errors::ArrayError> {
+            fn from_array(data: ndarray::Array2<crate::Float>) -> Result<Self, Box<dyn std::error::Error>> {
                 let indicies = Indices::new();
                 let (dim, _) = &data.dim();
 
                 if dim - 1 != indicies.max {
-                    return Err(crate::errors::ArrayError::Dimension)
+                    return Err(Box::new(crate::SphError::TestError))
                 }
 
                 println!("Dim:\t{dim:?}");
@@ -96,10 +95,10 @@ macro_rules! construct_state {
 
             fn from_shape_fn<F>(particles: usize, f: F) -> Self
             where
-                F: FnMut((usize, usize)) -> Self::T
+                F: FnMut((usize, usize)) -> crate::Float
             {
                 let indicies = Indices::new();
-                let data = ndarray::Array2::<Self::T>::from_shape_fn((indicies.max+1, particles), f);
+                let data = ndarray::Array2::<crate::Float>::from_shape_fn((indicies.max+1, particles), f);
 
             Self { indicies, data }
 
