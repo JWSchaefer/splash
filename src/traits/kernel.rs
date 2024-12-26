@@ -1,6 +1,6 @@
-use ndarray::ArrayView1;
-use anyhow::Result;
 use crate::Float;
+use anyhow::Result;
+use ndarray::ArrayView1;
 
 pub trait Kernel: Sized {
     fn new(h: Float) -> Result<Self>;

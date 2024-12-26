@@ -13,7 +13,7 @@ rand = { version = "0.8.5", features = ["small_rng"] }
 thiserror = "2.0.9"
 
 [features]
-default = ["f32"]
+default = ["f64"]
 f32 = []
 f64 = []
 

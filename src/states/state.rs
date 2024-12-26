@@ -81,12 +81,12 @@ macro_rules! construct_state {
                 Self { indicies, data }
             }
 
-            fn from_array(data: ndarray::Array2<crate::Float>) -> Result<Self, Box<dyn std::error::Error>> {
+            fn from_array(data: ndarray::Array2<crate::Float>) -> Result<Self, crate::SphError> {
                 let indicies = Indices::new();
                 let (dim, _) = &data.dim();
 
                 if dim - 1 != indicies.max {
-                    return Err(Box::new(crate::SphError::TestError))
+                    return Err(crate::SphError::TestError)
                 }
 
                 println!("Dim:\t{dim:?}");

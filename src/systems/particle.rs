@@ -1,7 +1,7 @@
-use ndarray::Array2;
 use crate::Float;
-use std::error::Error;
 use crate::State;
+use ndarray::Array2;
+use std::error::Error;
 
 pub struct ParticleSystem<S>
 where

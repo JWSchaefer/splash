@@ -1,9 +1,8 @@
-use crate::{errors::SphError::DimensionError, SphError};
 use crate::constants::PI;
 use crate::traits::kernel::Kernel;
 use crate::traits::DimensionValidator;
 use crate::Float;
-
+use crate::{errors::SphError::DimensionError, SphError};
 use anyhow::{Context, Result};
 use ndarray::ArrayView1;
 use ndarray_linalg::{Norm, Scalar};
@@ -47,7 +46,7 @@ impl<const D: usize> Kernel for CubicSpline<D> {
         let w = self.norm
             * match q {
                 q if q >= 0.0 && q <= 0.5 => {
-                    (6.0 * (q.powi(3) - q.powi(2))) + 1.0
+                    6.0 * (q.powi(3) - q.powi(2)) + 1.0
                 }
                 q if q > 0.5 && q <= 1.0 => 2.0 * (1.0 - q).powi(3),
                 _ => 0.0,
@@ -70,6 +69,18 @@ impl<const D: usize> Kernel for CubicSpline<D> {
         x2.validate(&[D])
             .context("Dimension of x2 does not match the kernel dimension")?;
 
-        Ok(0.0)
+        let q = (&x1 - &x2).norm() / self.h;
+
+        let w = self.norm
+            * self.h
+            * match q {
+                q if q >= 0.0 && q <= 0.5 => {
+                    6.0 * ((3.0 * q.powi(2)) - (2.0 * q))
+                }
+                q if q > 0.5 && q <= 1.0 => -6.0 * (1.0 - q).powi(2),
+                _ => 0.0,
+            };
+
+        Ok(w)
     }
 }
