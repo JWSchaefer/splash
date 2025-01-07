@@ -1,0 +1,22 @@
+[package]
+name = "core"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+common = {path = "../common", features = ["64"]}
+anyhow = "1.0.95"
+lazy_static = "1.5.0"
+ndarray = "0.15"
+ndarray-linalg = "0.16.0"
+paste = "1.0.15"
+rand = { version = "0.8.5", features = ["small_rng"] }
+thiserror = "2.0.9"
+
+
+[[bin]]
+name = "playground"
+path = "src/main.rs"
+
+[dev-dependencies]
+plotters = "0.3.7"

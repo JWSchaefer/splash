@@ -1,31 +1,32 @@
 use anyhow::Result;
-use sph::kernel::cubic_spline::CubicSpline;
-use sph::states::basic_state::BasicState2;
-use sph::systems::particle::ParticleSystem;
-use sph::traits::kernel::Kernel;
-use sph::Float;
+// use sph::kernel::cubic_spline::CubicSpline;
+// /* use sph::states::basic_state::BasicState2; */
+// use sph::systems::particle::ParticleSystem;
+// use sph::traits::kernel::Kernel;
+// use sph::Float;
+use sph::traits::state::MinimalStateIndicies;
 
 pub fn main() -> Result<()> {
-    fn calc(inp: (usize, usize)) -> Float {
-        let (i, j) = inp;
-        let (_i, j) = (i as Float, j as Float);
-        j / 100.0
-    }
-
-    let n_particles: usize = 400;
-
-    let system =
-        ParticleSystem::<BasicState2>::from_shape_fn(n_particles, calc);
-
-    let positions = system.state.position();
-
-    let kernel = CubicSpline::<2>::new(1.0)?;
-
-    for i in 0..n_particles {
-        /*         let _ = kernel.apply(positions.column(11), positions.column(i))?; */
-        let _ = kernel
-            .apply_derivative(positions.column(11), positions.column(i))?;
-    }
+    // fn calc(inp: (usize, usize)) -> Float {
+    //     let (i, j) = inp;
+    //     let (_i, j) = (i as Float, j as Float);
+    //     j / 100.0
+    // }
+    //
+    // let n_particles: usize = 400;
+    //
+    // let system =
+    //     ParticleSystem::<BasicState2>::from_shape_fn(n_particles, calc);
+    //
+    // let positions = system.state.position();
+    //
+    // let kernel = CubicSpline::<2>::new(1.0)?;
+    //
+    // for i in 0..n_particles {
+    //     kernel.apply(positions.column(11), positions.column(i))?;
+    //     kernel.apply_derivative(positions.column(11), positions.column(i))?;
+    // }
+    //
 
     Ok(())
 }
