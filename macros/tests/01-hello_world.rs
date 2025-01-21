@@ -1,7 +1,7 @@
 use macros::State;
 
 #[derive(State)]
-struct MyState<const D: usize> {
+struct Test<const D: usize> {
     #[vector]
     position: f64,
     #[vector]
@@ -12,8 +12,9 @@ struct MyState<const D: usize> {
     mass: f64,
     #[scalar]
     id: u32,
+    live: bool,
 }
 
 fn main() {
-    MyState::<2>::new();
+    Test::<2>::new();
 }
