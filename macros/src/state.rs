@@ -4,8 +4,12 @@ use crate::struct_field::StructField;
 use syn::{
     braced,
     parse::{Parse, ParseStream},
-    Generics, Ident, Result, Token,
+    Error, Generics, Ident, Result, Token,
 };
+
+use proc_macro2::Span;
+
+use std::collections::HashMap;
 
 pub struct State {
     name: Ident,
@@ -27,6 +31,58 @@ impl State {
     }
 }
 
+fn filter_duplicates(fields: Vec<(String, Span)>) -> Vec<(String, Span)> {
+    let mut map = HashMap::<String, Span>::new();
+    let mut out = Vec::<(String, Span)>::new();
+
+    for (f, s) in fields {
+        if !map.contains_key(&f) {
+            map.insert(f, s);
+        } else {
+            out.push((f, s));
+        }
+    }
+
+    out
+}
+
+fn validate_unique_fields(
+    struct_fields: &Vec<StructField>,
+    attribute_fields: &Vec<AttributeField>,
+) -> Result<()> {
+    let mut struct_fields: Vec<(String, Span)> = struct_fields
+        .iter()
+        .map(|f| (f.field.to_string(), f.field.span()))
+        .collect();
+
+    let mut attribute_fields: Vec<(String, Span)> = attribute_fields
+        .iter()
+        .map(|f| (f.field.to_string(), f.field.span()))
+        .collect();
+
+    attribute_fields.append(&mut struct_fields);
+
+    let attribute_fields = filter_duplicates(attribute_fields);
+
+    let error = attribute_fields
+        .iter()
+        .map(|(f, s)| {
+            Error::new(
+                *s,
+                format!("field `{}` already declared", f).to_string(),
+            )
+        })
+        .reduce(|mut a, b| {
+            a.combine(b);
+            a
+        });
+
+    match error {
+        Some(err) => Err(err),
+        _ => Ok(()),
+    }
+}
+
 impl Parse for State {
     fn parse(input: ParseStream) -> Result<Self> {
         input.parse::<Token![struct]>()?;
@@ -41,10 +97,7 @@ impl Parse for State {
         let attrs = AttributeField::parse_inner(&content)?;
         let fields = StructField::parse_inner(&content)?;
 
-        // if !content.is_empty() {
-        //     eprintln!("Unconsumed tokens: {}", content);
-        //     return Err(content.error("Unexpected tokens remaining"));
-        // }
+        validate_unique_fields(&fields, &attrs)?;
 
         Ok(Self {
             name,

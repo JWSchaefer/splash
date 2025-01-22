@@ -6,9 +6,7 @@ mod struct_field;
 use quote::quote;
 use state::State;
 
-use syn::{parse_macro_input, Type};
-
-use std::collections::HashSet;
+use syn::parse_macro_input;
 
 /// Parses the following syntax
 ///
@@ -31,18 +29,7 @@ use std::collections::HashSet;
 pub fn derive(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
     let parsed = parse_macro_input!(input as State);
 
-    let (name, generics, _fields, vectorised_fields) = parsed.unpack();
-
-    let vectorisd_types: Vec<Type> = vectorised_fields
-        .iter()
-        .map(|field| field.ty.clone())
-        .collect::<HashSet<_>>()
-        .into_iter()
-        .collect();
-
-    for ty in vectorisd_types {
-        println!("{}", quote! {#ty});
-    }
+    let (name, generics, struct_fields, attributed_fields) = parsed.unpack();
 
     let (impl_generics, type_generics, where_clause) =
         generics.split_for_impl();

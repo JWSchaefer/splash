@@ -3,13 +3,13 @@ use syn::{parse::ParseStream, Ident, Result, Token, Type, Visibility};
 #[allow(dead_code)]
 pub struct StructField {
     pub visibility: Visibility,
-    pub name: Ident,
+    pub field: Ident,
     pub ty: Type,
 }
 
 impl PartialEq for StructField {
     fn eq(&self, other: &Self) -> bool {
-        self.name.to_string() == other.name.to_string()
+        self.field.to_string() == other.field.to_string()
     }
 }
 
@@ -36,7 +36,7 @@ impl StructField {
 
         Ok(Self {
             visibility,
-            name,
+            field: name,
             ty,
         })
     }

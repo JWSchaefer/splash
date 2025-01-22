@@ -7,7 +7,7 @@ struct Test {
     #[vector(acceleration : f64)]
     #[scalar(mass: f64)]
     #[scalar(id : u32)]
-    id: u32,
+    other: u32,
 }
 
 fn main() {
