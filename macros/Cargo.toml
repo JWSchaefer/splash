@@ -2,6 +2,7 @@
 name = "macros"
 version = "0.1.0"
 edition = "2021"
+publish = false
 
 [lib]
 proc-macro = true
@@ -14,9 +15,8 @@ path = "tests/progress.rs"
 trybuild = { version = "1.0.49", features = ["diff"] }
 
 [dependencies]
-common = {path = "../common"}
+common = { path = "../common" }
 ndarray = "0.16.1"
 proc-macro2 = "1.0.93"
 quote = "1.0.38"
-syn = { version = "2.0.92", features =  ["extra-traits"]}
-
+syn = { version = "2.0.92", features = ["extra-traits"] }
