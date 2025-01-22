@@ -1,11 +1,13 @@
 mod attribute_field;
+mod attribute_info;
 mod quantity;
-mod state;
 mod struct_field;
+mod struct_info;
 
-use quote::quote;
-use state::State;
-
+use attribute_info::AttributeInfo;
+use proc_macro::TokenStream;
+use quote::{quote, ToTokens};
+use struct_info::StructInfo;
 use syn::parse_macro_input;
 
 /// Parses the following syntax
@@ -15,8 +17,8 @@ use syn::parse_macro_input;
 ///     $VISABILITY $NAME : $TYPE,
 /// }
 ///
-/// #[derive(State)]
-/// impl Test {
+/// #[lazy_nd(dim = D)]
+/// impl Test<const D : usize> {
 ///     #[scalar(position : f64)]
 ///     #[vector(velocity : f64)]
 ///     #[vector(acceleration : f64)]
@@ -25,23 +27,20 @@ use syn::parse_macro_input;
 ///     name : &str
 /// }
 
-#[proc_macro_derive(State, attributes(vector, scalar))]
-pub fn derive(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
-    let parsed = parse_macro_input!(input as State);
+#[proc_macro_attribute]
+pub fn lazy_nd(
+    attr: TokenStream,
+    item: TokenStream,
+) -> proc_macro::TokenStream {
+    let attr = parse_macro_input!(attr as AttributeInfo);
+    let parsed = parse_macro_input!(item as StructInfo);
 
     let (name, generics, struct_fields, attributed_fields) = parsed.unpack();
 
     let (impl_generics, type_generics, where_clause) =
         generics.split_for_impl();
 
-    let gen = quote! {
-
-        impl #impl_generics #name #type_generics #where_clause {
-            pub fn new()  {
-                println!("Hello, world!");
-            }
-        }
-    };
+    let gen = quote! { struct Test {}};
 
     gen.into()
 }

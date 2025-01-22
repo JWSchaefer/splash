@@ -1,5 +1,5 @@
 [package]
-name = "macros"
+name = "lazy_nd"
 version = "0.1.0"
 edition = "2021"
 publish = false
@@ -19,4 +19,4 @@ common = { path = "../common" }
 ndarray = "0.16.1"
 proc-macro2 = "1.0.93"
 quote = "1.0.38"
-syn = { version = "2.0.92", features = ["extra-traits"] }
+syn = { version = "2.0.92" }

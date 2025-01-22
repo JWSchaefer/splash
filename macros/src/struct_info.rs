@@ -11,14 +11,14 @@ use proc_macro2::Span;
 
 use std::collections::HashMap;
 
-pub struct State {
+pub struct StructInfo {
     name: Ident,
     generics: Generics,
     struct_fields: Vec<StructField>,
     attribute_fields: Vec<AttributeField>,
 }
 
-impl State {
+impl StructInfo {
     pub fn unpack(
         self,
     ) -> (Ident, Generics, Vec<StructField>, Vec<AttributeField>) {
@@ -83,7 +83,7 @@ fn validate_unique_fields(
     }
 }
 
-impl Parse for State {
+impl Parse for StructInfo {
     fn parse(input: ParseStream) -> Result<Self> {
         input.parse::<Token![struct]>()?;
 
