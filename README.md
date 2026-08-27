@@ -11,7 +11,3 @@ Flexible SPH algorithms in rust.
 ```bash
 git clone https://github.com/JWSchaefer/splash.git
 ```
-
-```bash
-cargo add PATH_TO_SPLASH
-```
